@@ -21,11 +21,6 @@ export default function SnippetList() {
   const [snippets, setSnippets] = useState([]);
   const router = useRouter();
   useEffect(() => {
-    // TODO: Fetch snippets from API
-    // setSnippets([
-    //   { id: 1, title: "Example Snippet", language: "javascript" },
-    //   { id: 2, title: "Another Snippet", language: "python" },
-    // ]);
     const fetchSnippets = async () => {
       const response = await fetch("/api/snippets");
       const data = await response.json();
