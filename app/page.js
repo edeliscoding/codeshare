@@ -23,7 +23,8 @@ import { getCurrentUser } from "@/lib/auth";
 import SharedSnippetList from "@/app/components/SharedSnippetList";
 
 async function getSnippets() {
-  const res = await fetch("http://localhost:3000/api/sharedsnippets", {
+  const baseUrl = process.env.NEXT_PUBLIC_HOST || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/sharedsnippets`, {
     cache: "no-store",
   });
   if (!res.ok) {

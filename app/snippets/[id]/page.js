@@ -239,7 +239,7 @@ export default function SingleSnippetPage() {
     };
 
     fetchData();
-    console.log("fetcheddata res", snippet);
+    // console.log("fetcheddata res", snippet);
   }, [id]);
 
   return (
