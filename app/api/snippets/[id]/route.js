@@ -83,7 +83,7 @@ export async function GET(request, { params }) {
 
   const snippet = await Snippet.findOne({
     _id: params.id,
-    userId: session.user.id,
+    // userId: session.user.id,
   });
 
   if (!snippet) {

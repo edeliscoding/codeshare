@@ -14,10 +14,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import IndividualSnippet from "./IndividualSnippet";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function SnippetList() {
   const [snippets, setSnippets] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     // TODO: Fetch snippets from API
     // setSnippets([
@@ -97,7 +99,9 @@ export default function SnippetList() {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Home</h1>
+        <Button onClick={() => router.push("/")} className="mb-4">
+          <h1 className="text-xl font-bold">Home</h1>
+        </Button>
         <Search className="w-6 h-6" />
       </header>
 
