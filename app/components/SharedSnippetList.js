@@ -9,7 +9,7 @@ const SharedSnippetList = ({ snippets, currentUser }) => {
     <div>
       {snippets.map((snippet) => {
         // Check if the current user is the author of this snippet
-        console.log("snippet", snippet);
+        // console.log("snippet", snippet);
         const isAuthor = snippet.userId === currentUser?.id;
 
         return (
