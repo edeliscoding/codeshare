@@ -377,7 +377,7 @@ export default function SingleSnippetPage() {
 
   const handleSave = async () => {
     // Implement API call to update snippet
-    console.log("snippet from handleSave", snippet);
+    // console.log("snippet from handleSave", snippet);
     try {
       const response = await fetch(`/api/snippets/${snippet._id}`, {
         method: "PUT",
@@ -386,13 +386,6 @@ export default function SingleSnippetPage() {
         },
         body: JSON.stringify(snippet),
       });
-      // if (response.ok) {
-      //   setSnippet(
-      //     snippets.map((snippet) =>
-      //       snippet._id === updatedSnippet._id ? updatedSnippet : snippet
-      //     )
-      //   );
-      // }
     } catch (error) {
       console.error("Error updating snippet:", error);
     }
@@ -418,15 +411,13 @@ export default function SingleSnippetPage() {
   };
 
   useEffect(() => {
-    if (id) {
-      const fetchData = async () => {
-        const response = await fetch(`/api/snippets/${id}`);
-        const data = await response.json();
-        setSnippet(data);
-      };
+    const fetchData = async () => {
+      const response = await fetch(`/api/snippets/${id}`);
+      const data = await response.json();
+      setSnippet(data);
+    };
 
-      fetchData();
-    }
+    fetchData();
   }, [id]);
 
   return (
