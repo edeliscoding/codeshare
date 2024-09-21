@@ -365,9 +365,6 @@ export default function SingleSnippetPage() {
   const [copied, setCopied] = useState(false);
 
   // If session data is still being fetched, handle the loading state
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
 
   console.log("snippet", snippet);
   // Calculate isAuthor based on the session and snippet
@@ -419,6 +416,10 @@ export default function SingleSnippetPage() {
 
     fetchData();
   }, [id]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4">
