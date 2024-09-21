@@ -13,11 +13,14 @@ export default function Navbar() {
           Code Snippet App
         </Link>
         <div className="space-x-4">
-          <Link href="/snippets" className="text-gray-300 hover:text-white">
+          {/* <Link href="/snippets" className="text-gray-300 hover:text-white">
             MY Snippets
-          </Link>
+          </Link> */}
           {session ? (
             <>
+              <Link href="/snippets" className="text-gray-300 hover:text-white">
+                MY Snippets
+              </Link>
               <Link href="/create" className="text-gray-300 hover:text-white">
                 Create Snippet
               </Link>

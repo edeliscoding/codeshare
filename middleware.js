@@ -21,5 +21,6 @@
 export { default } from "next-auth/middleware";
 
 export const config = {
-  matcher: ["/create", "/snippets/:path*"],
+  // matcher: ["/create", "/snippets/:path*"],
+  matcher: ["/create"],
 };

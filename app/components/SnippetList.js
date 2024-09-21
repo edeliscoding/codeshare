@@ -19,12 +19,34 @@ import { useRouter } from "next/navigation";
 
 export default function SnippetList() {
   const [snippets, setSnippets] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const fetchSnippets = async () => {
+  //     const response = await fetch("/api/snippets");
+  //     const data = await response.json();
+  //     setSnippets(data);
+  //     setIsLoading(false);
+  //   };
+  //   fetchSnippets();
+  //   return () => {};
+  // }, []);
+
   useEffect(() => {
+    setIsLoading(true);
     const fetchSnippets = async () => {
       const response = await fetch("/api/snippets");
       const data = await response.json();
-      setSnippets(data);
+
+      // Ensure that the response is an array
+      if (Array.isArray(data)) {
+        setSnippets(data);
+      } else {
+        setSnippets([]); // Fallback to an empty array if data is not an array
+      }
+
+      setIsLoading(false);
     };
     fetchSnippets();
     return () => {};
@@ -90,6 +112,10 @@ export default function SnippetList() {
       console.error("Error deleting snippet:", error);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Header */}
@@ -102,7 +128,7 @@ export default function SnippetList() {
 
       {/* Snippet Cards */}
       <main className="flex-grow overflow-y-auto">
-        {snippets.map((snippet, index) => (
+        {snippets?.map((snippet, index) => (
           <div key={index} className="border-b border-gray-700 p-4">
             <IndividualSnippet
               snippet={snippet}

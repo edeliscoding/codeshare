@@ -73,24 +73,53 @@ import dbConnect from "../../../lib/dbConnect";
 import Snippet from "../../../models/Snippet";
 import { revalidatePath } from "next/cache";
 
-export async function GET(request, { params }) {
+// export async function GET(request, { params }) {
+//   await dbConnect();
+//   const session = await getServerSession(authOptions);
+
+//   if (!session) {
+//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//   }
+
+//   const snippet = await Snippet.findOne({
+//     _id: params.id,
+//     // userId: session.user.id,
+//   });
+
+//   if (!snippet) {
+//     return NextResponse.json({ error: "Snippet not found" }, { status: 404 });
+//   }
+
+//   return NextResponse.json(snippet);
+// }
+
+export async function GET(req, { params }) {
+  const { id } = params;
   await dbConnect();
-  const session = await getServerSession(authOptions);
+  try {
+    // Fetch the snippet regardless of session state
+    const snippet = await Snippet.findById(id);
 
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!snippet) {
+      return NextResponse.json({ error: "Snippet not found" }, { status: 404 });
+    }
+
+    // Get the session (check if user is authenticated)
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      // Return the snippet data for unauthenticated users without throwing unauthorized errors
+      return NextResponse.json(snippet, { status: 200 });
+    }
+
+    // Return the snippet data, can include user-specific data if authenticated
+    return NextResponse.json(snippet, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-
-  const snippet = await Snippet.findOne({
-    _id: params.id,
-    // userId: session.user.id,
-  });
-
-  if (!snippet) {
-    return NextResponse.json({ error: "Snippet not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(snippet);
 }
 
 export async function PUT(request, { params }) {
@@ -111,7 +140,7 @@ export async function PUT(request, { params }) {
   if (!snippet) {
     return NextResponse.json({ error: "Snippet not found" }, { status: 404 });
   }
-
+  revalidatePath("/snippets");
   return NextResponse.json(snippet);
 }
 
