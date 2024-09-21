@@ -24,7 +24,7 @@ import SharedSnippetList from "@/app/components/SharedSnippetList";
 
 async function getSnippets() {
   const baseUrl = process.env.NEXT_PUBLIC_HOST || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/sharedsnippets`, {
+  const res = await fetch(`${baseUrl}/api/snippets`, {
     cache: "no-store",
   });
   if (!res.ok) {
