@@ -13,7 +13,10 @@ const SharedSnippetList = ({ snippets, currentUser }) => {
         const isAuthor = snippet.userId === currentUser?.id;
 
         return (
-          <div key={snippet._id} className="bg-gray-800 p-4 rounded-lg mb-3">
+          <div
+            key={snippet._id}
+            className="bg-gray-800 p-4 rounded-lg mb-3 text-white"
+          >
             <h2 className="text-1xl font-bold hover:underline">
               <Link href={`/snippets/${snippet._id}`}>{snippet.title}</Link>
             </h2>
