@@ -43,7 +43,7 @@ export default function SnippetForm() {
         throw new Error("Failed to create snippet");
       }
 
-      router.push("/snippets");
+      router.push("/");
     } catch (err) {
       setError("An error occurred while creating the snippet");
       console.error(err);

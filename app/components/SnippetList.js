@@ -21,17 +21,6 @@ export default function SnippetList() {
   const [snippets, setSnippets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const fetchSnippets = async () => {
-  //     const response = await fetch("/api/snippets");
-  //     const data = await response.json();
-  //     setSnippets(data);
-  //     setIsLoading(false);
-  //   };
-  //   fetchSnippets();
-  //   return () => {};
-  // }, []);
 
   useEffect(() => {
     setIsLoading(true);

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUp, MessageSquare, Heart, Edit, Trash } from "lucide-react";
 import moment from "moment";
 const SharedSnippetList = ({ snippets, currentUser }) => {
-  console.log("currentUser", currentUser);
+  // console.log("currentUser", currentUser);
   return (
     <div className="text-white">
       {snippets.map((snippet) => {

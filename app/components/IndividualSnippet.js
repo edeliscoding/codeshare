@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -7,8 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import moment from "moment";
 import Link from "next/link";
+
 const IndividualSnippet = ({ snippet, onUpdate, onDelete }) => {
   const { data: session } = useSession();
+
+  // console.log("session from individual snippet", session);
+
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedSnippet, setEditedSnippet] = useState(snippet);
@@ -91,7 +96,7 @@ const IndividualSnippet = ({ snippet, onUpdate, onDelete }) => {
             <pre className="bg-gray-800 p-4 rounded-lg mb-4 whitespace-pre-wrap">
               {snippet.code}
             </pre>
-            <div className="flex justify-between text-gray-400">
+            {/* <div className="flex justify-between text-gray-400">
               <span className="flex items-center">
                 <ArrowUp className="w-4 h-4 mr-1" /> {snippet.upvotes}
               </span>
@@ -99,9 +104,14 @@ const IndividualSnippet = ({ snippet, onUpdate, onDelete }) => {
                 <MessageSquare className="w-4 h-4 mr-1" /> {snippet.comments}
               </span>
               <span className="flex items-center">
-                <Heart className="w-4 h-4 mr-1" /> {snippet.likes}
+                <Heart
+                  className={`${
+                    hasFavorited ? "fill-rose-500" : "fill-neutral-500"
+                  } w-4 h-4 mr-1`}
+                />{" "}
+             
               </span>
-            </div>
+            </div> */}
           </>
         )}
       </div>

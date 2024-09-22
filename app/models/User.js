@@ -20,6 +20,13 @@ const UserSchema = new mongoose.Schema(
       required: true,
       min: 2,
     },
+    image: {
+      type: String,
+      default: "",
+    },
+    favoriteSnippets: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Snippet" },
+    ],
   },
   { timestamps: true }
 );

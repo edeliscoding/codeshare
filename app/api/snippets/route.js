@@ -88,7 +88,7 @@ import Snippet from "../../models/Snippet";
 // import User from "../../models/User";
 import { authOptions } from "../auth/[...nextauth]/route"; // Make sure this path points to your authOptions
 import { revalidatePath } from "next/cache";
-
+import mongoose from "mongoose";
 export async function GET(req) {
   await dbConnect();
 
@@ -120,21 +120,57 @@ export async function GET(req) {
   }
 }
 
+// export async function POST(request) {
+//   await dbConnect();
+//   const session = await getServerSession(authOptions);
+
+//   if (!session) {
+//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//   }
+
+//   const data = await request.json();
+//   const snippet = new Snippet({
+//     ...data,
+//     userId: session.user.id,
+//   });
+
+//   await snippet.save();
+//   revalidatePath("/");
+//   return NextResponse.json(snippet, { status: 201 });
+// }
 export async function POST(request) {
-  await dbConnect();
-  const session = await getServerSession(authOptions);
+  try {
+    await dbConnect();
+    const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const data = await request.json();
+
+    // Validate the user ID
+    if (!mongoose.Types.ObjectId.isValid(session.user.id)) {
+      console.error("Invalid user ID:", session.user.id);
+      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
+    const userId = new mongoose.Types.ObjectId(session.user.id);
+
+    const snippet = new Snippet({
+      ...data,
+      userId: userId,
+    });
+
+    await snippet.save();
+
+    revalidatePath("/");
+    return NextResponse.json(snippet, { status: 201 });
+  } catch (error) {
+    console.error("Error creating snippet:", error);
+    return NextResponse.json(
+      { error: "Error creating snippet" },
+      { status: 500 }
+    );
   }
-
-  const data = await request.json();
-  const snippet = new Snippet({
-    ...data,
-    userId: session.user.id,
-  });
-
-  await snippet.save();
-  revalidatePath("/");
-  return NextResponse.json(snippet, { status: 201 });
 }
