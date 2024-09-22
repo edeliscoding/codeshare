@@ -20,11 +20,19 @@ const SnippetSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // userId: {
+    //   type: String,
+    //   required: [true, "User ID is required"],
+    // },
     userId: {
-      type: String,
-      required: [true, "User ID is required"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    upvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
+
   {
     timestamps: true,
   }
