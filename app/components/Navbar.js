@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+
+  const router = useRouter();
 
   return (
     <nav className="bg-gray-800 p-4">
@@ -33,12 +36,28 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => signIn("google")}
-              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-            >
-              Sign In
-            </button>
+            // <button
+            //   onClick={() => signIn("google")}
+            //   className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+            // >
+            //   Sign In
+            // </button>
+            <span className="flex gap-2">
+              <button
+                onClick={() => router.push("/signin")}
+                // onClick={() => signIn("credentials")}
+                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => router.push("/register")}
+                // onClick={() => signIn("credentials")}
+                className=" hover:bg-green-600 text-white px-3 py-1 rounded"
+              >
+                Register
+              </button>
+            </span>
           )}
         </div>
       </div>

@@ -392,7 +392,19 @@ export default function SingleSnippetPage() {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this snippet?")) {
       // Implement API call to delete snippet
-      router.push("/snippets");
+      // await onDelete(snippet._id);
+      // router.push("/snippets");
+      try {
+        const response = await fetch(`/api/snippets/${id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error deleting snippet:", error);
+      }
     }
   };
 

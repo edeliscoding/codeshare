@@ -76,9 +76,98 @@
 
 // const handler = NextAuth(authOptions);
 // export { handler as GET, handler as POST };
+/////////////////////////////////////////////////////////////////////
+///version 2
+// import NextAuth from "next-auth";
+// import GoogleProvider from "next-auth/providers/google";
+// import CredentialsProvider from "next-auth/providers/credentials";
+// import User from "@/app/models/User";
+// import bcrypt from "bcrypt";
 
+// export const authOptions = {
+//   providers: [
+//     GoogleProvider({
+//       clientId: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     }),
+//     CredentialsProvider({
+//       name: "credentials",
+//       // credentials: {
+//       //   username: { label: "Username", type: "text" },
+//       //   email: { label: "Email", type: "email" },
+//       //   password: { label: "Password", type: "password" },
+//       // },
+//       async authorize(credentials, req) {
+//         try {
+//           if (!credentials.email || !credentials.password) {
+//             throw new Error("Please enter an email and password");
+//           }
+//           // Add logic here to look up the user from the credentials supplied by the client
+//           const user = await User.findOne({ email: credentials.email }); // Implement this in your project
+//           // Add logic here to look up the user from the credentials supplied
+//           // console.log("user from db", user);
+//           // if (!user) throw new Error("Wrong credentials!");
+//           if (!user || !isPasswordCorrect) {
+//             console.log("Authentication failed");
+//             return null;
+//           }
+
+//           const isPasswordCorrect = await bcrypt.compare(
+//             credentials.password,
+//             user.password
+//           );
+//           // const { username, email, password } = credentials;
+//           // if (!isPasswordCorrect) throw new Error("Wrong credentials!");
+//           // Example logic (replace with your DB logic)
+//           if (isPasswordCorrect) {
+//             return { ...user, redirectUrl: "/" };
+//           }
+//           return user;
+//         } catch (error) {
+//           console.log(error);
+//           throw new Error("Failed to login!");
+//         }
+//       },
+//     }),
+//   ],
+//   callbacks: {
+//     async session({ session, token }) {
+//       if (session?.user) {
+//         session.user.id = token.sub;
+//       }
+//       return session;
+//     },
+//     async jwt({ token, user }) {
+//       console.log("user", user);
+//       if (user) {
+//         token.sub = user.id || user._id;
+//       }
+//       return token;
+//     },
+//   },
+//   callbackUrl: "/",
+//   secret: process.env.NEXTAUTH_SECRET,
+//   pages: {
+//     signIn: "/signin",
+//     newUser: "/register",
+//     //   signUp: "/register",
+//     //   // error: '/auth/error', // Error code passed in query string as ?error=
+//     //   // verifyRequest: '/auth/verify-request', // (used for check email message)
+//     //   // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+//   },
+//   session: { strategy: "jwt" },
+// };
+
+// const handler = NextAuth(authOptions);
+// export { handler as GET, handler as POST };
+////////////////////////////
+///version 3///////////
+// File: app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/app/models/User";
+import bcrypt from "bcrypt";
 
 export const authOptions = {
   providers: [
@@ -86,15 +175,73 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const user = await User.findOne({ email: credentials.email });
+          if (!user) {
+            return null;
+          }
+
+          const isPasswordCorrect = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!isPasswordCorrect) {
+            return null;
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            username: user.username,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
+      },
+    }),
   ],
   callbacks: {
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.sub;
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.email = user.email;
       }
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.username = token.username;
+        session.user.email = token.email;
+      }
+      session.accessToken = token.accessToken;
       return session;
     },
   },
+  pages: {
+    signIn: "/signin",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);

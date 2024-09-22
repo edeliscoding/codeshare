@@ -35,7 +35,9 @@ async function getSnippets() {
 
 export default async function HomePage() {
   const snippets = await getSnippets();
+
   const currentUser = await getCurrentUser();
+  console.log("currentUser", currentUser);
   // console.log("shared snippets", snippets);
   // const isAuthor =
   //   session?.user?.id ===

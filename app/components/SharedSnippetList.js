@@ -5,26 +5,44 @@ import { Button } from "@/components/ui/button";
 import { ArrowUp, MessageSquare, Heart, Edit, Trash } from "lucide-react";
 import moment from "moment";
 const SharedSnippetList = ({ snippets, currentUser }) => {
+  console.log("currentUser", currentUser);
   return (
-    <div>
+    <div className="text-white">
       {snippets.map((snippet) => {
         // Check if the current user is the author of this snippet
         // console.log("snippet", snippet);
         const isAuthor = snippet.userId === currentUser?.id;
-
+        const avatar = "https://avatar.iran.liara.run/public/45";
         return (
           <div
             key={snippet._id}
             className="bg-gray-800 p-4 rounded-lg mb-3 text-white"
           >
-            <h2 className="text-1xl font-bold hover:underline">
-              <Link href={`/snippets/${snippet._id}`}>{snippet.title}</Link>
-            </h2>
-            <p className="">{snippet.code}</p>
-
+            <div className="flex items-center">
+              <div className="flex flex-col gap-2">
+                <img
+                  src={avatar}
+                  // alt={snippet.userName}
+                  className="w-10 h-10 rounded-full mr-4"
+                />
+                {/* <span>{currentUser?.username}</span> */}
+              </div>
+              <div>
+                <p className="font-normal">{snippet.language}</p>
+                <p className="text-gray-400 text-sm">
+                  {moment(snippet.createdAt).fromNow()}
+                </p>
+              </div>
+            </div>
+            <div className="mt-2 ml-12">
+              <h2 className="text-1xl font-bold hover:underline">
+                <Link href={`/snippets/${snippet._id}`}>{snippet.title}</Link>
+              </h2>
+              <p className="">{snippet.code}</p>
+            </div>
             {/* Conditionally render Edit/Delete buttons if the current user is the author */}
             {isAuthor && (
-              <div className="mt-2 flex gap-2">
+              <div className="mt-2 flex gap-2 ml-12">
                 <Button>
                   <Edit className="w-4 h-4 mr-2" />
                   <Link
@@ -34,7 +52,7 @@ const SharedSnippetList = ({ snippets, currentUser }) => {
                     Edit
                   </Link>
                 </Button>
-                <Button variant="destructive">
+                {/* <Button variant="destructive">
                   <Trash className="w-4 h-4 mr-2" />{" "}
                   <Link
                     href={`/snippets/${snippet._id}`}
@@ -42,7 +60,7 @@ const SharedSnippetList = ({ snippets, currentUser }) => {
                   >
                     Delete
                   </Link>
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>
